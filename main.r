@@ -4,6 +4,7 @@ library('MASS')
 library('Epi')
 library('mclust')
 source("Interval_EM.r")
+source("IKEM_IS.r")
 source("Interval_Kernel_EM.r")
 source('Interval_Kernel_Fuzzy_C-Means.r')
 
@@ -11,9 +12,9 @@ getData = function(base, scenario){
 		return(
 		switch(base, 
 			switch(scenario, 
-				base1(n1=100, n2=100, var1=3, var2=3, range1=2, range2=2, offset2=c(10,5)),
+				base1(n1=20, n2=20, var1=3, var2=3, range1=2, range2=2, offset2=c(10,5)),
 				base1(100, 100, 3, 1, 2, 2, c(10,5)),
-				base1(100, 100, 3, 3, 5, 1, c(0, 0))
+				base1(20, 20, 3, 3, 5, 1, c(0, 0))
 			),
 			switch(scenario, 
 				base2(n1=300, n2=80, var2=0.1, range1=0.5, range2=0.5, offset2=c(-1.5, 1.5)),
@@ -151,6 +152,16 @@ for(i in 1:100){
 criterio = c()
 for(i in 1:100){
 	retorno1 = IKEM(x, maxRep = 5, kernelType = 0, D = 10, plot = FALSE, numRep = 1)
+	roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+	if(roc$AUC < 0.5){
+		roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+	}
+	criterio = c(criterio, roc$AUC)	
+}
+
+criterio = c()
+for(i in 1:100){
+	retorno1 = IKEMIS(x, repPerIteration = 5, plot = FALSE, iterations = 1)
 	roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
 	if(roc$AUC < 0.5){
 		roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
