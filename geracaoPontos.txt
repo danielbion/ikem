@@ -1,0 +1,148 @@
+else if(indexData == 2){ # Seno
+		#y = a + b*sin(c*x + d)
+		#a -> minY
+		#b -> (maxY-minY)
+		#c -> (2*pi)/(maxX - minX)
+		#d -> 0
+		minX1 = 0;
+		maxX1 = 10;		
+		minX2 = 0;
+		maxX2 = 10;
+		
+		deslocamentoY = 3;
+		minY1 = -5+deslocamentoY;
+		maxY1 = 5+deslocamentoY;		
+		minY2 = -5-deslocamentoY;
+		maxY2 = 5-deslocamentoY;
+		
+		n1 = 100;
+		n2 = 100;
+		n = n1 + n2;
+		nClusters = 2;
+		x1 = runif(n1, minX1, maxX1);
+		fatorX1 = (2*pi)/(maxX1 - minX1);
+		y1 = minY1+ (maxY1-minY1)*sin(fatorX1*x1);
+		
+		x2 = runif(n2, minX2, maxX2);
+		fatorX2 = (2*pi)/(maxX2 - minX2);
+		y2 = minY2+ (maxY2-minY2)*sin(fatorX2*x2);
+		
+		class1 = cbind(x1,y1);	
+		class2 = cbind(x2,y2);	
+		synthetic = rbind(class1,class2);
+		plot(synthetic,main="Dataset 2",xlab="x",pch=(rep(2:3, c(n1,n2))),col=(rep(1:2, c(n1,n2))),asp=1)
+		legend("topleft", inset=.02, legend=c("Class 1", "Class 2"),col=1:2,pch=2:3)
+		
+		reference = matrix(0,n,1);
+		reference[1:n1,1] = rep(1,n1);
+		reference[n1+1:n2,1] = rep(2,n2);
+		reference = as.vector(reference);
+	}
+	else if(indexData == 3){ # Espiral (2 classes)
+		# r = a + b*teta
+		# teta -> uniforme(tetai,tetaf)
+		# x -> r*cos(teta+teta0)
+		# y -> r*sin(teta+teta0)
+		n1 = 20;
+		n2 = 20;
+		n = n1 + n2;
+		nClusters = 2;
+		
+		a1 = 0;
+		b1 = 1;
+		teta0 = 0;
+		teta1i = 0.2*pi;
+		teta1f = 1.5*pi;
+		teta1 = runif(n1, teta1i, teta1f);
+		r1 = a1 + b1*teta1;
+		x1 = r1*cos(teta1+teta0);
+		y1 = r1*sin(teta1+teta0);
+		
+		a2 = 0;
+		b2 = 1;
+		teta0 = pi;
+		teta2i = 0.2*pi;
+		teta2f = 1.5*pi;
+		teta2 = runif(n2, teta2i, teta2f);
+		r2 = a2 + b2*teta2;
+		x2 = r2*cos(teta2+teta0);
+		y2 = r2*sin(teta2+teta0);
+		
+		class1 = cbind(x1,y1);	
+		class2 = cbind(x2,y2);	
+		synthetic = rbind(class1,class2);
+		plot(synthetic,main="Dataset 3",xlab="x",pch=(rep(2:3, c(n1,n2))),col=(rep(1:2, c(n1,n2))),asp=1)
+		legend("topleft", inset=.02, legend=c("Class 1", "Class 2"),col=1:2,pch=2:3)
+		
+		reference = matrix(0,n,1);
+		reference[1:n1,1] = rep(1,n1);
+		reference[n1+1:n2,1] = rep(2,n2);
+		reference = as.vector(reference);		
+	}
+	else if(indexData == 4){ # Espiral (4 classes)
+		# r = a + b*teta
+		# teta -> uniforme(tetai,tetaf)
+		# x -> r*cos(teta+teta0)
+		# y -> r*sin(teta+teta0)
+		n1 = 50;
+		n2 = 50;
+		n3 = 50;
+		n4 = 50;
+		n = n1 + n2 + n3 + n4;
+		nClusters = 4;
+		
+		a1 = 0;
+		b1 = 1;
+		teta0 = 1*pi/2;
+		teta1i = 0.2*pi;
+		teta1f = 1.5*pi;
+		teta1 = runif(n1, teta1i, teta1f);
+		r1 = a1 + b1*teta1;
+		x1 = r1*cos(teta1+teta0);
+		y1 = r1*sin(teta1+teta0);
+		
+		a2 = 0;
+		b2 = 1;
+		teta0 = 2*pi/2;
+		teta2i = 0.2*pi;
+		teta2f = 1.5*pi;
+		teta2 = runif(n2, teta2i, teta2f);
+		r2 = a2 + b2*teta2;
+		x2 = r2*cos(teta2+teta0);
+		y2 = r2*sin(teta2+teta0);
+		
+		a3 = 0;
+		b3 = 1;
+		teta0 = 3*pi/2;
+		teta3i = 0.2*pi;
+		teta3f = 1.5*pi;
+		teta3 = runif(n3, teta3i, teta3f);
+		r3 = a3 + b3*teta3;
+		x3 = r3*cos(teta3+teta0);
+		y3 = r3*sin(teta3+teta0);
+		
+		a4 = 0;
+		b4 = 1;
+		teta0 = 4*pi/2;
+		teta4i = 0.2*pi;
+		teta4f = 1.5*pi;
+		teta4 = runif(n4, teta4i, teta4f);
+		r4 = a4 + b4*teta4;
+		x4 = r4*cos(teta4+teta0);
+		y4 = r4*sin(teta4+teta0);
+		
+		class1 = cbind(x1,y1);	
+		class2 = cbind(x2,y2);	
+		class3 = cbind(x3,y3);	
+		class4 = cbind(x4,y4);
+		synthetic = rbind(class1,class2,class3,class4);
+		plot(synthetic,main="Dataset 4",xlab="x", ylab="y",pch=(rep(2:5, c(n1,n2,n3,n4))),col=(rep(1:4, c(n1,n2,n3,n4))),asp=1)
+		legend("topleft", inset=.02, legend=c("Class 1", "Class 2","Class 3","Class 4"),col=1:4,pch=2:5)
+		
+		reference = matrix(0,n,1);
+		reference[1:n1,1] = rep(1,n1);
+		reference[n1+1:n2,1] = rep(2,n2);
+		reference[n1+n2+1:n3,1] = rep(3,n3);
+		reference[n1+n2+n3+1:n4,1] = rep(4,n4);
+		reference = as.vector(reference);		
+	}

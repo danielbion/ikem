@@ -222,27 +222,37 @@ IKEMIS = function(x, repPerIteration, D, plot, iterations){
 				
 		for(k in 1:c){
 			mcov = matrix(0, nrow = p, ncol = p)
-			for (i in 1:n){											
-				for(p1 in 1:p){
-					infIdxp1 = (p1*2) - 1
-					supIdxp1 = (p1*2)
-					for(p2 in 1:p){
-						infIdxp2 = (p2*2) - 1
-						supIdxp2 = (p2*2)
-						
-						W = (x[i,infIdxp1] - theta$media[k,infIdxp1]) * (x[i,infIdxp2] - theta$media[k,infIdxp2])
-						V = (x[i,supIdxp1] - theta$media[k,supIdxp1]) * (x[i,supIdxp2] - theta$media[k,supIdxp2])
-						
-						mcov[p1,p2] = mcov[p1,p2] + (posteriori[i,k] * (W + V))						
-					}			
-				}			
+			for (i in 1:n){		
+				m = kernelizedDistance(x, theta$media, i, k)
+				mcov = mcov + (posteriori[i,k] * m)
 			}
-			theta$mcov[[k]] = mcov/(2*sum(posteriori[,k]))
+			theta$mcov[[k]] = mcov/(sum(posteriori[,k]))
 		}
 		
 		return (theta)
 	}
-
+	
+	kernelizedDistance = function(x, mu, i, k){	
+		m = matrix(0, nrow = p, ncol = p)
+		
+		infSeq =  seq(from = 1, to = pp, by = 2)
+		
+		x_inf = x[i,infSeq]
+		x_sup = x[i,infSeq+1]
+		mu_inf = mu[k,infSeq]
+		mu_sup = mu[k,infSeq+1]
+				
+		for(h in 1:p){	
+			for(j in 1:p){				
+				m[h, j] =  IRBF(x_inf[h], x_sup[h], x_inf[j], x_sup[j], 1.0) -
+							  IRBF(x_inf[h], x_sup[h], mu_inf[j], mu_sup[j], 1.0) -
+							  IRBF(mu_inf[h], mu_sup[h], x_inf[j], x_sup[j], 1.0) +
+							  IRBF(mu_inf[h], mu_sup[h], mu_inf[j], mu_inf[j], 1.0)
+			}
+		}
+		return (m)
+	}
+	
 	criterio = function(){
 		ML = 0.0		
 		for(i in 1:n){
