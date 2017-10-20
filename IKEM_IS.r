@@ -186,13 +186,13 @@ IKEMIS = function(x, repPerIteration, D, plot, iterations){
 				B[k] = XMsup %*% solve(theta$mcov[[k]]) %*% t(XMsup)
 				#A[k] = XMinf %*% ginv(theta$mcov[[k]]) %*% t(XMinf)
 				#B[k] = XMsup %*% ginv(theta$mcov[[k]]) %*% t(XMsup)
-				numk = theta$tau[k] * (exp(-1/2 * (A[k]+B[k])/2) / sqrt(((2*pi)^p) * det(theta$mcov[[k]])))
-				num = cbind(num, numk)
-				den = den + numk
-			}			
+				num = cbind(num, theta$tau[k] * (exp(-1/2 * (A[k]+B[k])/2) / sqrt(((2*pi)^p) * det(theta$mcov[[k]]))))				
+			}	
+
+			den = sum(num)
 			
 			if(is.nan(den)){
-				cat('DEN == 0')
+				cat('E-step: DEN == 0')
 			}
 			
 			posteriori[i, ] = num/den			
@@ -208,16 +208,18 @@ IKEMIS = function(x, repPerIteration, D, plot, iterations){
 			infSeq =  seq(from = 1, to = pp, by = 2)
 			
 			num = 0
-			
+			den = 0
 			for(i in 1:n){
 				a_inf = x[i,infSeq]
 				a_sup = x[i,infSeq+1]
 				b_inf = theta$media[k,infSeq]
 				b_sup = theta$media[k,infSeq+1]
 				
-				num = num + (posteriori[i,k] * x[i,] * IRBF(a_inf, a_sup, b_inf, b_sup, 1.0))			
+				kernelDist = IRBF(a_inf, a_sup, b_inf, b_sup, 1.0)				
+				num = num + (posteriori[i,k] * x[i,] * kernelDist)	
+				den = den + (posteriori[i,k] * kernelDist)	
 			}
-			theta$media[k,] = num / sum(posteriori[,k])		
+			theta$media[k,] = num / den		
 		}		
 				
 		for(k in 1:c){
@@ -277,11 +279,11 @@ IKEMIS = function(x, repPerIteration, D, plot, iterations){
 			MLdepois = -1
 			# kernelInicial = inicializarK()
 
-			posteriori = matrix(0, nrow = n, ncol = c)		
-			# posteriori[,1] = runif(n, 0, 1)
-			# posteriori[,2] = 1 - posteriori[,1]
+			posteriori = matrix(0.5, nrow = n, ncol = c)					
 			retorno = inicializarPosteriori()
 			posteriori = retorno$Posteriori
+			#posteriori[,1] = runif(n, 0, 1)
+			#posteriori[,2] = 1 - posteriori[,1]
 			theta = retorno$Theta
 			
 			old_posteriori = posteriori
@@ -298,7 +300,7 @@ IKEMIS = function(x, repPerIteration, D, plot, iterations){
 				#cpkernelM = retorno [[2]]		
 				#tau = apply(posteriori, 2, sum)/n		
 				#   E.step()			
-				#old_posteriori = posteriori
+				old_posteriori = posteriori
 				
 				#posteriori = E.step()
 				theta = M.step()	

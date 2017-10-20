@@ -12,7 +12,7 @@ getData = function(base, scenario){
 		return(
 		switch(base, 
 			switch(scenario, 
-				base1(n1=20, n2=20, var1=3, var2=3, range1=2, range2=2, offset2=c(10,5)),
+				base1(n1=100, n2=100, var1=3, var2=3, range1=2, range2=2, offset2=c(10,5)),
 				base1(100, 100, 3, 1, 2, 2, c(10,5)),
 				base1(20, 20, 3, 3, 5, 1, c(0, 0))
 			),
@@ -161,7 +161,7 @@ for(i in 1:100){
 
 criterio = c()
 for(i in 1:100){
-	retorno1 = IKEMIS(x, repPerIteration = 5, plot = FALSE, iterations = 1)
+	retorno1 = IKEMIS(x, repPerIteration = 50, plot = FALSE, iterations = 1)
 	roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
 	if(roc$AUC < 0.5){
 		roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
@@ -242,7 +242,7 @@ alvo[c(4,11,15,22,23)] = 2
 x_interval = interval(x[,1],x[,2])
 y_interval = interval(x[,3],x[,4])	
 z_interval = interval(x[,5],x[,6])	
-intervalGraph3D(x_interval, y_interval, z_interval, alvo = alvo)
+#intervalGraph3D(x_interval, y_interval, z_interval, alvo = alvo)
 
 alvo[c(4,11,15,22,23)] = 0
 
