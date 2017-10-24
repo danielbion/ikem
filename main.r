@@ -70,7 +70,7 @@ criterio3 = c()
 while(length(criterio3) < 100){
 	print(length(criterio3))
 	tryCatch({
-		retorno1 = IKEM(x, maxRep = 5, kernelType = 0, D = 10, plot = FALSE, numRep = 1)
+		retorno1 = IKEM(x, maxRep = 50, kernelType = 0, D = 4, plot = FALSE, numRep = 10)
 		roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
 		if(roc$AUC < 0.5){
 			roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
