@@ -146,3 +146,54 @@ else if(indexData == 2){ # Seno
 		reference[n1+n2+n3+1:n4,1] = rep(4,n4);
 		reference = as.vector(reference);		
 	}
+	
+##################################################################################################################
+
+		#y = a + b*sin(c*x + d)
+		#a -> minY
+		#b -> (maxY-minY)
+		#c -> (2*pi)/(maxX - minX)
+		#d -> 0
+		minX1 = 0;
+		maxX1 = 10;		
+		minX2 = 0;
+		maxX2 = 10;
+		
+		deslocamentoY = 7;
+		minY1 = -5+deslocamentoY;
+		maxY1 = 5+deslocamentoY;		
+		minY2 = -5-deslocamentoY;
+		maxY2 = 5-deslocamentoY;
+		
+		n1 = 50;
+		n2 = 50;
+		n = n1 + n2;
+		nClusters = 2;
+		x1 = runif(n1, minX1, maxX1);
+		fatorX1 = (2*pi)/(maxX1 - minX1);
+		y1 = minY1+ (maxY1-minY1)*sin(fatorX1*x1);
+		
+		x2 = runif(n2, minX2, maxX2);
+		fatorX2 = (2*pi)/(maxX2 - minX2);
+		y2 = minY2+ (maxY2-minY2)*sin(fatorX2*x2);
+		
+		class1 = cbind(x1,y1);	
+		class2 = cbind(x2,y2);	
+		synthetic = rbind(class1,class2);
+		plot(synthetic,main="Dataset 2",xlab="x",pch=(rep(2:3, c(n1,n2))),col=(rep(1:2, c(n1,n2))),asp=1)
+		legend("topleft", inset=.02, legend=c("Class 1", "Class 2"),col=1:2,pch=2:3)
+		
+		reference = matrix(0,n,1);
+		reference[1:n1,1] = rep(1,n1);
+		reference[n1+1:n2,1] = rep(2,n2);
+		reference = as.vector(reference);
+		
+		alvo = c(rep(0, dim(class1)[1]), rep(1, dim(class2)[1]))
+		x_1 = rbind(class1, class2)
+		x_2 = x_1 + runif(length(alvo), -1, 1)
+		x = cbind(x_1[,1], x_2[,1], x_1[,2], x_2[,2])
+		x = normalizarDadosSimbolicos(x)
+		
+		x_interval = interval(x[,1],x[,2])
+		y_interval = interval(x[,3],x[,4])
+		intervalGraph2D(x_interval,y_interval)			

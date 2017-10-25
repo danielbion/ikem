@@ -36,62 +36,82 @@ alvo[c(4,11,15,22,23)] = 0
 #######################################################
 
 
-criterio1 = c()
-while(length(criterio1) < 100){
-	print(length(criterio1))
+gerarAlvo = function(p){
+	target = c()
+	for(i in 1:dim(p)[1]){
+		target = c(target, which(p[i,] == max(p[i,])))
+	}
+	return (target)
+}
+
+IEM_roc = c()
+IEM_rand = c()
+while(length(IEM_rand) < 100){
+	print(length(IEM_rand))
 	tryCatch({
 		retorno1 = IEM(x, tipoMatriz = 3, numRep = 3, plot = FALSE)
-		roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
-		if(roc$AUC < 0.5){
-			roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
-		}
-		if(roc$AUC <= 1){
-			criterio1 = c(criterio1, roc$AUC)	
-		}
+		# roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+		# if(roc$AUC < 0.5){
+			# roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+		# }
+		# if(roc$AUC <= 1){
+			# IEM_roc = c(IEM_roc, roc$AUC)	
+		# }
+		target = gerarAlvo(retorno1$Posteriori)
+		IEM_rand = c(IEM_rand, adjustedRandIndex( target, alvo) )
 	}, error=function(e){})
 }
 
-criterio2 = c()
-while(length(criterio2) < 100){
-	print(length(criterio2))
+IKFCM_roc = c()
+IKFCM_rand = c()
+while(length(IKFCM_rand) < 100){
+	print(length(IKFCM_rand))
 	tryCatch({
 		retorno1 = IKFCM(x, c = 2, m = 0.1, maxRep = 50, monteCarlo = 5)		
-		roc = ROC(test = retorno1$U[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
-		if(roc$AUC < 0.5){
-			roc = ROC(test = retorno1$U[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
-		}
-		if(roc$AUC <= 1){
-			criterio2 = c(criterio2, roc$AUC)	
-		}
+		# roc = ROC(test = retorno1$U[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+		# if(roc$AUC < 0.5){
+			# roc = ROC(test = retorno1$U[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+		# }
+		# if(roc$AUC <= 1){
+			# IKFCM_roc = c(IKFCM_roc, roc$AUC)	
+		# }
+		target = gerarAlvo(retorno1$U)
+		IKFCM_rand = c(IKFCM_rand, adjustedRandIndex( target, alvo) )		
 	}, error=function(e){})
 }
 
-criterio3 = c()
-while(length(criterio3) < 100){
-	print(length(criterio3))
+IKEM_roc = c()
+IKEM_rand = c()
+while(length(IKEM_rand) < 100){
+	print(length(IKEM_rand))
 	tryCatch({
 		retorno1 = IKEM(x, maxRep = 50, kernelType = 0, D = 4, plot = FALSE, numRep = 10)
-		roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
-		if(roc$AUC < 0.5){
-			roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
-		}
-		if(roc$AUC <= 1){
-			criterio3 = c(criterio3, roc$AUC)	
-		}
+		# roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+		# if(roc$AUC < 0.5){
+			# roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+		# }
+		# if(roc$AUC <= 1){
+			# IKEM_roc = c(IKEM_roc, roc$AUC)	
+		# }
+		target = gerarAlvo(retorno1$Posteriori)
+		IKEM_rand = c(IKEM_rand, adjustedRandIndex( target, alvo) )
 	}, error=function(e){})
 }
 
-criterio4 = c()
-while(length(criterio4) < 100){
-	print(length(criterio4))
+IKEM_IS_roc = c()
+IKEM_IS_rand = c()
+while(length(IKEM_IS_rand) < 100){
+	print(length(IKEM_IS_rand))
 	tryCatch({
 		retorno1 = IKEMIS(x, repPerIteration = 50, plot = FALSE, iterations = 10)
-		roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
-		if(roc$AUC < 0.5){
-			roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
-		}
-		if(roc$AUC <= 1){
-			criterio4 = c(criterio4, roc$AUC)	
-		}
+		# roc = ROC(test = retorno1$Posteriori[,1], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+		# if(roc$AUC < 0.5){
+			# roc = ROC(test = retorno1$Posteriori[,2], stat = alvo, PV = FALSE, MX = FALSE, MI = FALSE, )
+		# }
+		# if(roc$AUC <= 1){
+			# IKEM_IS_roc = c(IKEM_IS_roc, roc$AUC)	
+		# }
+		target = gerarAlvo(retorno1$Posteriori)
+		IKEM_IS_rand = c(IKEM_IS_rand, adjustedRandIndex( target, alvo) )		
 	}, error=function(e){})
 }
